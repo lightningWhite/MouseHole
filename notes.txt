@@ -1,0 +1,32 @@
+https://www.baeldung.com/linux/mouse-events-input-event-interface
+
+ls -l by-id/
+cat /proc/bus/input/devices | grep -A3 -B5 event12
+sudo cat /dev/input/event12
+sudo cat /dev/input/event12 | od -t x1 -w24
+
+sudo apt-get install evemu-tools evtest
+sudo evemu-describe
+sudo evemu-record /dev/input/event12
+sudo evtest --grab /dev/input/event12
+
+sudo evtest --grab /dev/input/event12 | nc -u 192.168.194.255 44044
+
+# Other machine
+nc -lu 44044
+
+# Just parse the incoming messages line by line and turn them into commands like this:
+
+# Incoming Lines
+Event: time 1714754867.577229, type 2 (EV_REL), code 1 (REL_Y), value -2
+Event: time 1714754867.577229, -------------- SYN_REPORT ------------
+Event: time 1714754867.585193, type 2 (EV_REL), code 1 (REL_Y), value -1
+Event: time 1714754867.585193, -------------- SYN_REPORT ------------
+Event: time 1714754867.593151, type 2 (EV_REL), code 1 (REL_Y), value -2
+
+# Generate commands like this
+sudo evemu-event /dev/input/event12 --type EV_REL --code REL_Y --value -2 --sync
+
+Remote Mouse Control! Or, a Mouse Hole into the other computer.
+
+Should probably have certs or something to prevent serious security flaws since it's just an open UDP stream...
